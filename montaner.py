@@ -4,11 +4,10 @@ import sys
 from time import strftime
 from PIL import Image
 
-row_size = 4
+row_size = 8
 margin = 0
 
 def generate_montage(filenames, output_fn):
-    Image.MAX_IMAGE_PIXELS = 1000000000
     images = [Image.open(filename) for filename in filenames]
 
     width = max(int(image.size[0]) + margin for image in images)*row_size
