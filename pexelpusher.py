@@ -1,6 +1,7 @@
+import sys
+sys.path.append('./modules')
 
 import tobias
-
 tobiasj = tobias.JSON()
 api_key = tobiasj.loadThis('api_key.json')[0]
 
@@ -10,6 +11,7 @@ import requests
 import montaner
 import shutil
 from PIL import Image
+import random
 
 # instantiate PyPexels object
 
@@ -27,7 +29,6 @@ class PexelPusher:
             for video in search_videos_page.entries:
                 self.latestIDs.append(video.id)
                 if video.width/video.height >= 1.33:
-                    #print(video.id, video.user.get('name'), video.url)
                     image = video.image.split('?')
                     selected_videos.append(image[0])
             if not search_videos_page.has_next:
@@ -42,9 +43,10 @@ class PexelPusher:
         for query in querylist:
             video_list = self.searchVideos(query, qSize)
             nlist = '{:04d}'.format(querylist.index(query)+1)
-            cache_folder = ('./cacheimages/')
+            cache_folder = ('.\\cacheimages\\')
             if not os.path.exists(cache_folder):
                 os.mkdir(cache_folder)
+            random.shuffle(video_list)
             for imageurl in video_list:
                 r = requests.get(imageurl)
                 filename = cache_folder+os.path.split(imageurl)[1]
@@ -54,6 +56,7 @@ class PexelPusher:
                 image = Image.open(filename)
                 image.thumbnail((400,400))
                 image.save(filename)
+        self.makeContactSheet()
 
     def makeContactSheet(self):
         root = '.\\cacheimages\\'
@@ -61,9 +64,11 @@ class PexelPusher:
         images = []
         for root, dirs, files in os.walk(root):
             #print(root)
-            for file in os.listdir(os.path.join(root)):
+            targetPath = os.listdir(os.path.join(root))
+            random.shuffle(targetPath)
+            for file in targetPath:
                     images.append(os.path.join(root,file))
-        outfile = os.path.join('.\\cs_{0}.jpg'.format(index))
+        outfile = os.path.join('.\\media\\cs_{0}.jpg'.format(index))
         montaner.generate_montage(images, outfile)
         img = Image.open(outfile)
         img.show()
@@ -71,7 +76,7 @@ class PexelPusher:
         shutil.rmtree(root)
 
     def saveVideoIDs(self):
-        file = '.\\latestIDs.json'
+        file = '.\\config\\latestIDs.json'
         if os.path.exists(file):
             os.remove(file)
             tobiasj.saveThis(self.latestIDs, file)
@@ -79,7 +84,7 @@ class PexelPusher:
             tobiasj.saveThis(self.latestIDs, file)
 
     def downloadVideos(self):
-        file = '.\\latestIDs.json'
+        file = '.\\config\\latestIDs.json'
         ids = tobiasj.loadThis(file)
         namelist = []
         for videoid in ids:
@@ -90,21 +95,20 @@ class PexelPusher:
                     name = 'ID{0}_{1}'.format(videoid,video.user.get('name'))
                     if name not in namelist:
                         namelist.append(name)
-                    filename = './videos/{0}.mp4'.format(videoid)
+                    filename = '.\\media\\videos\\{0}.mp4'.format(videoid)
                     if not os.path.isfile(filename):
+                        print('Downloading this video: {0}'.format(filename))
                         r = requests.get(link)
                         with open(filename, 'wb') as outfile:
                             outfile.write(r.content)
                             outfile.close()
-                        print('Downloaded this video: {0}'.format(filename))
                     else:
                         print('Skipping this video because it already exists: {0}'.format(filename))
-        tobiasj.saveThis(namelist,'.\\credits.json')
+        tobiasj.saveThis(namelist,'.\\config\\credits.json')
             # print(video.id, video.user.get('name'), video.url)
 
 if __name__ == '__main__':
     ppusher = PexelPusher()
-    query = ['city', 'grass']
-    ppusher.getThumbs(query, 6)
-    ppusher.makeContactSheet()
+    query = ['city', 'grass','nature']
+    ppusher.getThumbs(query, 30)
     #ppusher.downloadVideos()
