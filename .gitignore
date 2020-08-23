@@ -3,3 +3,6 @@ api_key.json
 *.jpeg
 *.jpg
 *.pyc
+credits.json
+*.mp4
+latestIDs.json

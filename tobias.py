@@ -14,11 +14,11 @@ class JSON(object):
             with open(filename, 'w') as outfile:
                 json.dump(data, outfile)
                 outfile.close()
-                print("I saved your data in this JSON file, "
-                       "Jason: {0}".format(filename))
+                print("Booyah! This file was saved"
+                       ": {0}".format(filename))
         except Exception as e:
-            print ("I'm really sorry Jason, I couldn't save this file "
-                   "because: {0}".format(e))
+            print ("I believe I just 'blue' myself"
+                   ": {0}".format(e))
 
     def loadThis(self, path):
         try:
@@ -26,9 +26,9 @@ class JSON(object):
             with open(filename, 'r') as readfile:
                 data = json.load(readfile)
                 readfile.close()
-                print("I loaded the data in this JSON file, "
-                   "Jason: {0}".format(filename))
+                print("That's a huge load!"
+                   ": {0}".format(filename))
                 return data
         except Exception as e:
-            print ("I'm really sorry Jason, I couldn't read this file "
-                   "because: {0}".format(e))
+            print ("I prematurely shot my load"
+                   ": {0}".format(e))

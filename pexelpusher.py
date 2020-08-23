@@ -1,8 +1,8 @@
 
-import argonauts
+import tobias
 
-argonaut = argonauts.JSON()
-api_key = argonaut.loadThis('api_key.json')[0]
+tobiasj = tobias.JSON()
+api_key = tobiasj.loadThis('api_key.json')[0]
 
 import os
 from pypexels import PyPexels
@@ -67,33 +67,44 @@ class PexelPusher:
         montaner.generate_montage(images, outfile)
         img = Image.open(outfile)
         img.show()
+        self.saveVideoIDs()
         shutil.rmtree(root)
 
-    def getVideoIDs(self):
+    def saveVideoIDs(self):
         file = '.\\latestIDs.json'
         if os.path.exists(file):
             os.remove(file)
-            argonaut.saveThis(self.latestIDs, file)
+            tobiasj.saveThis(self.latestIDs, file)
         else:
-            argonaut.saveThis(self.latestIDs, file)
+            tobiasj.saveThis(self.latestIDs, file)
 
     def downloadVideos(self):
-        self.getVideoIDs()
         file = '.\\latestIDs.json'
-        ids = argonaut.loadThis(file)
+        ids = tobiasj.loadThis(file)
+        namelist = []
         for videoid in ids:
             video = self.py_pexel.single_video(video_id=videoid)
-                r = requests.get(imageurl)
-                filename = cache_folder+os.path.split(imageurl)[1]
-            with open(filename, 'wb') as outfile:
-                outfile.write(r.content)
-                outfile.close()
-            #print(video.id, video.user.get('name'), video.url)
-
+            for each in video.video_files:
+                if 'hd' in each['quality']:
+                    link = each['link']
+                    name = 'ID{0}_{1}'.format(videoid,video.user.get('name'))
+                    if name not in namelist:
+                        namelist.append(name)
+                    filename = './videos/{0}.mp4'.format(videoid)
+                    if not os.path.isfile(filename):
+                        r = requests.get(link)
+                        with open(filename, 'wb') as outfile:
+                            outfile.write(r.content)
+                            outfile.close()
+                        print('Downloaded this video: {0}'.format(filename))
+                    else:
+                        print('Skipping this video because it already exists: {0}'.format(filename))
+        tobiasj.saveThis(namelist,'.\\credits.json')
+            # print(video.id, video.user.get('name'), video.url)
 
 if __name__ == '__main__':
     ppusher = PexelPusher()
-    query = ['buildings', 'city','urban']
-    ppusher.getThumbs(query, 3)
+    query = ['city', 'grass']
+    ppusher.getThumbs(query, 6)
     ppusher.makeContactSheet()
-    ppusher.downloadVideos()
+    #ppusher.downloadVideos()
