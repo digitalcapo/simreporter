@@ -17,7 +17,7 @@ class JSON(object):
                 print("Booyah! This file was saved"
                        ": {0}".format(filename))
         except Exception as e:
-            print ("I believe I just 'blue' myself"
+            print ("I believe I just 'blue' my save"
                    ": {0}".format(e))
 
     def loadThis(self, path):

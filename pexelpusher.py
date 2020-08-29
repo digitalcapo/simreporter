@@ -35,7 +35,6 @@ class PexelPusher:
                 break
             search_videos_page = search_videos_page.get_next_page()
         return selected_videos
-        
 
     def getThumbs(self, querylist,qSize):
         nlist = 0
@@ -70,13 +69,13 @@ class PexelPusher:
                     images.append(os.path.join(root,file))
         outfile = os.path.join('.\\media\\cs_{0}.jpg'.format(index))
         montaner.generate_montage(images, outfile)
+        self.saveVideoIDs()
         img = Image.open(outfile)
         img.show()
-        self.saveVideoIDs()
         shutil.rmtree(root)
 
     def saveVideoIDs(self):
-        file = '.\\config\\latestIDs.json'
+        file = '.\\modules\\config\\latestIDs.json'
         if os.path.exists(file):
             os.remove(file)
             tobiasj.saveThis(self.latestIDs, file)
@@ -84,7 +83,7 @@ class PexelPusher:
             tobiasj.saveThis(self.latestIDs, file)
 
     def downloadVideos(self):
-        file = '.\\config\\latestIDs.json'
+        file = '.\\modules\\config\\latestIDs.json'
         ids = tobiasj.loadThis(file)
         namelist = []
         for videoid in ids:
@@ -104,11 +103,11 @@ class PexelPusher:
                             outfile.close()
                     else:
                         print('Skipping this video because it already exists: {0}'.format(filename))
-        tobiasj.saveThis(namelist,'.\\config\\credits.json')
+        tobiasj.saveThis(namelist,'.\\modules\\config\\credits.json')
             # print(video.id, video.user.get('name'), video.url)
 
 if __name__ == '__main__':
     ppusher = PexelPusher()
-    query = ['city', 'grass','nature']
-    ppusher.getThumbs(query, 30)
-    #ppusher.downloadVideos()
+    query = ['fire', 'city','firefigther','jungle','wetlands']
+    ppusher.getThumbs(query, 60/len(query))
+    ppusher.downloadVideos()

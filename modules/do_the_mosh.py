@@ -1,16 +1,17 @@
-import argonauts
-argonauts = argonauts.JSON()
+import tobias
+tobias = tobias.JSON()
 import os
 
 # default Settings
-config = './moshsettings.json'
-settings = {'in':0,'in_fx':3,'out_fx':6,'out':60,'pframes':15,'res':1080,'fps':25}
+config = '.\\config\\moshsettings.json'
+root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+settings = {'in':0,'in_fx':3,'out_fx':6,'out':60,'pframes':1,'res':1080,'fps':60}
 
 try:
     if os.path.exists(config):
-        settings = argonauts.loadThis(config)
+        settings = tobias.loadThis(config)
     else:
-        argonauts.saveThis(settings, config)
+        tobias.saveThis(settings, config)
 except Exception as e:
     print('No settings obtained from Jason: {0}'.format(e))
 
@@ -22,7 +23,9 @@ repeat_p_frames = settings['pframes']
 output_width = settings['res']
 fps = settings['fps']
 
-output_directory = 'moshed_videos'
+output_directory = os.path.join(root,'media','moshed_videos')
+
+print(output_directory)
 
         # here's the useful information if you're trying to adapt this into another programming language
         # - convert the video to AVI format
@@ -56,8 +59,8 @@ def quit_if_no_video_file(video_file):
 
 # make sure the output directory exists
 def confirm_output_directory(output_directory):
-    if not os.path.exists(output_directory): os.mkdir(output_directory)
-
+    if not os.path.exists(output_directory):
+        os.mkdir(output_directory)
     return(output_directory)
 
 # this makes the options available at the command line for ease of use
@@ -91,6 +94,8 @@ print('start time from original video: ',str(start_sec))
 print('end time from original video: ',str(end_sec))
 print('mosh effect applied at: ',str(start_effect_sec))
 print('mosh effect stops being applied at: ',str(end_effect_sec))
+print('mosh effect pframes: ',str(repeat_p_frames))
+print('mosh effect fps: ',str(fps))
 
 if start_effect_sec > end_effect_sec:
     print("No moshing will occur because --start_effect_sec begins after --end_effect_sec")
@@ -104,7 +109,7 @@ file_name = os.path.splitext( os.path.basename(input_video) )[0]
 input_avi =  os.path.join(output_dir, 'datamoshing_input.avi')          # must be an AVI so i-frames can be located in binary file
 output_avi = os.path.join(output_dir, 'datamoshing_output.avi')
 # {} is where 'file_name' is put when making the 'output_video' variable
-output_video = os.path.join(output_dir, 'moshed_{}.mp4'.format(file_name))      # this ensures we won't over-write your original video
+output_video = os.path.join(output_dir, 'moshed_{0}_pfr{1}_fps{2}.mp4'.format(file_name, repeat_p_frames, fps))      # this ensures we won't over-write your original video
 
 
 # THIS IS WHERE THE MAGIC HAPPENS
