@@ -108,6 +108,6 @@ class PexelPusher:
 
 if __name__ == '__main__':
     ppusher = PexelPusher()
-    query = ['fire', 'city','firefigther','jungle','wetlands']
-    ppusher.getThumbs(query, 60/len(query))
-    ppusher.downloadVideos()
+    query = ['crowd', 'beach', 'city']
+    ppusher.getThumbs(query, 40/len(query))
+    #ppusher.downloadVideos()
