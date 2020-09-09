@@ -10,3 +10,9 @@ config/moshsettings.json
 *.mp3
 *.wav
 *.mov
+*.avi
+modules/config/cursedclock.credits.json
+modules/config/cursedclock_IDs.json
+modules/config/moshsettings.json
+modules/config/moshsettings.json
+modules/config/moshsettings.json

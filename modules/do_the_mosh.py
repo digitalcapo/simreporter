@@ -1,6 +1,7 @@
 import tobias
 tobias = tobias.JSON()
 import os
+import random 
 
 # default Settings
 config = '.\\config\\moshsettings.json'
@@ -111,8 +112,11 @@ output_avi = os.path.join(output_dir, 'datamoshing_output.avi')
 # {} is where 'file_name' is put when making the 'output_video' variable
 output_video = os.path.join(output_dir, 'moshed_{0}_pfr{1}_fps{2}.mp4'.format(file_name, repeat_p_frames, fps))      # this ensures we won't over-write your original video
 
-
 # THIS IS WHERE THE MAGIC HAPPENS
+
+if os.path.exists(output_video):
+    print('This MF already exists')
+    sys.exit()
 
 # make sure ffmpeg is installed
 try:

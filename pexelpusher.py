@@ -17,10 +17,10 @@ import random
 
 
 class PexelPusher:
-    def __init__(self):
+    def __init__(self, vname=''):
         self.py_pexel = PyPexels(api_key=api_key)
-
         self.latestIDs = []
+        self.vname = vname
 
     def searchVideos(self, query='', qSize=10):
         selected_videos = []
@@ -39,6 +39,9 @@ class PexelPusher:
     def getThumbs(self, querylist,qSize):
         nlist = 0
         root = '.\\cacheimages\\'
+        if self.vname == '':
+            print('Please name your video first, champion.')
+            return
         for query in querylist:
             video_list = self.searchVideos(query, qSize)
             nlist = '{:04d}'.format(querylist.index(query)+1)
@@ -59,7 +62,7 @@ class PexelPusher:
 
     def makeContactSheet(self):
         root = '.\\cacheimages\\'
-        index = 1
+        vname = self.vname
         images = []
         for root, dirs, files in os.walk(root):
             #print(root)
@@ -67,7 +70,7 @@ class PexelPusher:
             random.shuffle(targetPath)
             for file in targetPath:
                     images.append(os.path.join(root,file))
-        outfile = os.path.join('.\\media\\cs_{0}.jpg'.format(index))
+        outfile = os.path.join('.\\media\\cs_{0}.jpg'.format(vname))
         montaner.generate_montage(images, outfile)
         self.saveVideoIDs()
         img = Image.open(outfile)
@@ -75,7 +78,7 @@ class PexelPusher:
         shutil.rmtree(root)
 
     def saveVideoIDs(self):
-        file = '.\\modules\\config\\latestIDs.json'
+        file = '.\\modules\\config\\{0}_IDs.json'.format(self.vname)
         if os.path.exists(file):
             os.remove(file)
             tobiasj.saveThis(self.latestIDs, file)
@@ -83,7 +86,7 @@ class PexelPusher:
             tobiasj.saveThis(self.latestIDs, file)
 
     def downloadVideos(self):
-        file = '.\\modules\\config\\latestIDs.json'
+        file = '.\\modules\\config\\{0}_IDs.json'.format(self.vname)
         ids = tobiasj.loadThis(file)
         namelist = []
         for videoid in ids:
@@ -103,11 +106,12 @@ class PexelPusher:
                             outfile.close()
                     else:
                         print('Skipping this video because it already exists: {0}'.format(filename))
-        tobiasj.saveThis(namelist,'.\\modules\\config\\credits.json')
+        tobiasj.saveThis(namelist,'.\\modules\\config\\{0}.credits.json'.format(self.vname))
             # print(video.id, video.user.get('name'), video.url)
 
 if __name__ == '__main__':
-    ppusher = PexelPusher()
-    query = ['crowd', 'beach', 'city']
-    ppusher.getThumbs(query, 40/len(query))
+    vname = 'cursedclock'
+    ppusher = PexelPusher(vname)
+    query = ['crowd', 'beach']
+    ppusher.getThumbs(query, 60/len(query))
     #ppusher.downloadVideos()
