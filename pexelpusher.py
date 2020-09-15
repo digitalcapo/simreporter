@@ -89,6 +89,9 @@ class PexelPusher:
         file = '.\\modules\\config\\{0}_IDs.json'.format(self.vname)
         ids = tobiasj.loadThis(file)
         namelist = []
+        root = '.\\media\\videos\\{0}\\'.format(self.vname)
+        if not os.path.exists(root):
+            os.mkdir(root)
         for videoid in ids:
             video = self.py_pexel.single_video(video_id=videoid)
             for each in video.video_files:
@@ -97,7 +100,7 @@ class PexelPusher:
                     name = 'ID{0}_{1}'.format(videoid,video.user.get('name'))
                     if name not in namelist:
                         namelist.append(name)
-                    filename = '.\\media\\videos\\{0}.mp4'.format(videoid)
+                    filename = root+'{0}.mp4'.format(videoid)
                     if not os.path.isfile(filename):
                         print('Downloading this video: {0}'.format(filename))
                         r = requests.get(link)
@@ -110,8 +113,8 @@ class PexelPusher:
             # print(video.id, video.user.get('name'), video.url)
 
 if __name__ == '__main__':
-    vname = 'cursedclock'
+    vname = 'fungui'
     ppusher = PexelPusher(vname)
-    query = ['crowd', 'beach']
+    query = ['mushroom', 'mushrooms', 'fungui']
     ppusher.getThumbs(query, 60/len(query))
-    #ppusher.downloadVideos()
+    ppusher.downloadVideos()

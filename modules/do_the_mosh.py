@@ -23,8 +23,9 @@ end_sec = settings['out']
 repeat_p_frames = settings['pframes']
 output_width = settings['res']
 fps = settings['fps']
+vname = settings['vname']
 
-output_directory = os.path.join(root,'media','moshed_videos')
+output_directory = os.path.join(root,'media','moshed_videos','{0}'.format(vname))
 
 print(output_directory)
 
