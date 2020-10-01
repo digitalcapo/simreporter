@@ -3,7 +3,7 @@
 
 A race against myself. It will end when the computer beats me at editing based on a series of videos I started here:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/BsO9VTuCJqw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![SIM REPORTER ON YOUTUBE](https://img.youtube.com/vi/BsO9VTuCJqw/0.jpg)](https://www.youtube.com/watch?v=BsO9VTuCJqw)
 
 Some of them will be generated, some will be 'hand' made by me. 
 The idea is to get to the point were they look the same and I'm not gonna be involved in the process.
